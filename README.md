@@ -20,9 +20,9 @@ Automatizar a criação de etiquetas com QR Code para inventário de equipamento
 
 A planilha deve conter, no mínimo, uma coluna com a TAG ou identificador único do equipamento. Exemplo:
 
-| TAG | Equipamento | Modelo | Fabricante | Setor | Nº Série | 
-|---|---|---|---|---|---|---|
-| TAG-02332 | MEDIDOR DE SINAIS | CARESCAPE | GE HEALTHCARE | CENTRO CIRÚRGICO | 123456ABC | 
+| TAG | Equipamento | Modelo | Fabricante | Setor | Nº Série |
+|---|---|---|---|---|---|
+| TAG-02332 | MEDIDOR DE SINAIS | CARESCAPE | GE HEALTHCARE | CENTRO CIRÚRGICO | 123456ABC |
 
 A coluna padrão para geração do QR Code é a **TAG**, mas outra coluna pode ser selecionada na interface, caso necessário.
 
@@ -30,7 +30,7 @@ A coluna padrão para geração do QR Code é a **TAG**, mas outra coluna pode s
 
 ### Versão online (Streamlit Cloud)
 
-Acesse: `https://gerador-qr-inventario.streamlit.app/`
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gerador-qr-inventario.streamlit.app/)
 
 1. Faça o upload da planilha `.xlsx`
 2. Selecione a aba (se houver mais de uma)
@@ -78,12 +78,14 @@ A aplicação abrirá automaticamente em http://localhost:8501.
     Pillow - Manipulação de imagens
 
 📁 Estrutura do projeto
-text
+
+```text
 
 gerador-qr-inventario/
 ├── app.py               # Aplicação principal
 ├── requirements.txt     # Dependências do projeto
 └── README.md            # Este arquivo
+```
 
 🔒 Privacidade e segurança
 
