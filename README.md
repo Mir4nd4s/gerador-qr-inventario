@@ -59,3 +59,48 @@ pip install -r requirements.txt
 
 # Rode a aplicação
 streamlit run app.py
+```
+
+A aplicação abrirá automaticamente em http://localhost:8501.
+
+🛠️ Tecnologias utilizadas
+
+    Python 3.10+ - Linguagem base
+
+    Streamlit - Interface web
+
+    pandas - Leitura de planilhas
+
+    openpyxl - Manipulação de arquivos Excel
+
+    qrcode - Geração dos QR Codes
+
+    Pillow - Manipulação de imagens
+
+📁 Estrutura do projeto
+text
+
+gerador-qr-inventario/
+├── app.py               # Aplicação principal
+├── requirements.txt     # Dependências do projeto
+└── README.md            # Este arquivo
+
+🔒 Privacidade e segurança
+
+    Os arquivos enviados são processados em memória e não são armazenados em disco
+
+    Nenhum dado é enviado para terceiros
+
+    O código-fonte fica no GitHub, mas os dados das planilhas nunca saem da sessão do usuário
+
+🤝 Contribuições
+
+Sugestões de melhoria são bem-vindas. Abra uma issue ou envie um pull request.
+📄 Licença
+
+Este projeto é de uso interno. Todos os direitos reservados.
+👤 Autor
+
+Mir4nd4s
+
+    GitHub: @Mir4nd4s
