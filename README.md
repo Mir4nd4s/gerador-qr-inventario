@@ -100,6 +100,12 @@ gerador-qr-inventario/
 Sugestões de melhoria são bem-vindas. Abra uma issue ou envie um pull request.
 📄 Licença
 
+## 🔗 Projeto relacionado
+
+- **[PWA Inventário de Equipamentos](https://github.com/Mir4nd4s/pwa-inventario)** — Aplicativo mobile usado pelos técnicos para escanear os QR Codes gerados por esta ferramenta durante o inventário de campo. Funciona offline no celular.
+
+> ⚠️ **Nota:** o repositório da PWA é privado por conter informações operacionais internas (lista de unidades e setores). O acesso é restrito à equipe responsável pelo inventário.
+
 Este projeto é de uso interno. Todos os direitos reservados.
 👤 Autor
 
