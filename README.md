@@ -30,7 +30,7 @@ A coluna padrão para geração do QR Code é a **TAG**, mas outra coluna pode s
 
 ### Versão online (Streamlit Cloud)
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gerador-qr-inventario.streamlit.app/)
+Acesse aqui: [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gerador-qr-inventario.streamlit.app/)
 
 1. Faça o upload da planilha `.xlsx`
 2. Selecione a aba (se houver mais de uma)
