@@ -12,7 +12,7 @@ import tempfile
 # CONFIGURAÇÃO DA PÁGINA
 # ============================================================
 st.set_page_config(
-    page_title="Gerador de QR Codes - Inventário Hospitalar",
+    page_title="Gerador de QR Codes - Inventário",
     page_icon="🏥",
     layout="centered"
 )
@@ -127,10 +127,10 @@ def processar_planilha(arquivo_excel, coluna_alvo, nome_aba=None):
 # INTERFACE STREAMLIT
 # ============================================================
 
-st.title("🏥 Gerador de QR Codes - Inventário Hospitalar")
+st.title("🏥 Gerador de QR Codes - Inventário")
 st.markdown(
-    "Suba a planilha de equipamentos do hospital e gere automaticamente "
-    "os QR Codes de cada item, prontos para impressão em etiquetas."
+    "Suba a planilha de equipamentos desejada e gere automaticamente "
+    "os QR Codes de cada item, com sua TAG para impressão em etiquetas."
 )
 st.divider()
 
