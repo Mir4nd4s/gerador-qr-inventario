@@ -4,7 +4,7 @@ Ferramenta web para gerar automaticamente QR Codes de equipamentos a partir de u
 
 ## 🎯 Objetivo
 
-Automatizar a criação de etiquetas com QR Code para inventário de equipamentos, permitindo que o processo de contagem seja feito por leitura de código, de forma mais rápida e confiável.
+Automatizar a criação de etiquetas com QR Code para inventário de equipamentos hospitalares, permitindo que o processo de contagem seja feito por leitura de código, de forma mais rápida e confiável.
 
 ## ✨ Funcionalidades
 
@@ -30,7 +30,7 @@ A coluna padrão para geração do QR Code é a **TAG**, mas outra coluna pode s
 
 ### Versão online (Streamlit Cloud)
 
-Acesse aqui: [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gerador-qr-inventario.streamlit.app/)
+Acesse: https://gerador-qr-inventario.streamlit.app/
 
 1. Faça o upload da planilha `.xlsx`
 2. Selecione a aba (se houver mais de uma)
@@ -61,44 +61,25 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-A aplicação abrirá automaticamente em http://localhost:8501.
+A aplicação abrirá automaticamente em `http://localhost:8501`.
 
-🛠️ Tecnologias utilizadas
+## 🛠️ Tecnologias utilizadas
 
-    Python 3.10+ - Linguagem base
+- **[Python 3.10+](https://www.python.org/)** — Linguagem base
+- **[Streamlit](https://streamlit.io/)** — Interface web
+- **[pandas](https://pandas.pydata.org/)** — Leitura de planilhas
+- **[openpyxl](https://openpyxl.readthedocs.io/)** — Manipulação de arquivos Excel
+- **[qrcode](https://github.com/lincolnloop/python-qrcode)** — Geração dos QR Codes
+- **[Pillow](https://python-pillow.org/)** — Manipulação de imagens
 
-    Streamlit - Interface web
-
-    pandas - Leitura de planilhas
-
-    openpyxl - Manipulação de arquivos Excel
-
-    qrcode - Geração dos QR Codes
-
-    Pillow - Manipulação de imagens
-
-📁 Estrutura do projeto
+## 📁 Estrutura do projeto
 
 ```text
-
 gerador-qr-inventario/
 ├── app.py               # Aplicação principal
 ├── requirements.txt     # Dependências do projeto
 └── README.md            # Este arquivo
 ```
-
-🔒 Privacidade e segurança
-
-    Os arquivos enviados são processados em memória e não são armazenados em disco
-
-    Nenhum dado é enviado para terceiros
-
-    O código-fonte fica no GitHub, mas os dados das planilhas nunca saem da sessão do usuário
-
-🤝 Contribuições
-
-Sugestões de melhoria são bem-vindas. Abra uma issue ou envie um pull request.
-📄 Licença
 
 ## 🔄 Fluxo completo do inventário
 
@@ -109,7 +90,7 @@ Este projeto faz parte de um sistema maior de inventário hospitalar:
 │  1. GERADOR DE QR CODES      │  ← Este repositório
 │  (Streamlit - Python)        │
 │                              │
-│  Planilha do hospital →      │
+│  Planilha dos equipamentos →      │
 │  QR Codes gerados →          │
 │  Etiquetas prontas           │
 └──────────────┬───────────────┘
@@ -123,7 +104,7 @@ Este projeto faz parte de um sistema maior de inventário hospitalar:
 │  Técnicos escaneiam QR →     │
 │  Registram setor →           │
 │  Exportam Excel              │
-└──────────────────────────────┘
+└──────────────┬───────────────┘
                │
                ▼
 ┌──────────────────────────────┐
@@ -134,6 +115,20 @@ Este projeto faz parte de um sistema maior de inventário hospitalar:
 │  Comparação com total →      │
 │  Relatório final             │
 └──────────────────────────────┘
+```
+
+Sugestão de ordem de uso:
+
+1. Rode o **Gerador de QR Codes** com a planilha dos equipamentos
+2. Imprima as etiquetas e cole nos equipamentos
+3. Os técnicos usam a **PWA Inventário** para escanear em campo
+4. Consolide os arquivos Excel exportados para conferência final
+
+## 🔒 Privacidade e segurança
+
+- Os arquivos enviados são processados **em memória** e não são armazenados em disco
+- Nenhum dado é enviado para terceiros
+- O código-fonte fica no GitHub, mas os dados das planilhas **nunca** saem da sessão do usuário
 
 ## 🔗 Projeto relacionado
 
@@ -141,9 +136,16 @@ Este projeto faz parte de um sistema maior de inventário hospitalar:
 
 > ⚠️ **Nota:** o repositório da PWA é privado por conter informações operacionais internas (lista de unidades e setores). O acesso é restrito à equipe responsável pelo inventário.
 
+## 🤝 Contribuições
+
+Sugestões de melhoria são bem-vindas. Abra uma *issue* ou envie um *pull request*.
+
+## 📄 Licença
+
 Este projeto é de uso interno. Todos os direitos reservados.
-👤 Autor
 
-Mir4nd4s
+## 👤 Autor
 
-    GitHub: @Mir4nd4s
+**Mir4nd4s**
+
+- GitHub: [@Mir4nd4s](https://github.com/Mir4nd4s)
