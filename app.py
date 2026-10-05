@@ -12,7 +12,7 @@ import tempfile
 # CONFIGURAÇÃO DA PÁGINA
 # ============================================================
 st.set_page_config(
-    page_title="Gerador de QR Codes - Inventário",
+    page_title="Gerador de QR Codes - Inventário Hospitalar",
     page_icon="🏥",
     layout="centered"
 )
@@ -21,62 +21,76 @@ st.set_page_config(
 # FUNÇÕES AUXILIARES
 # ============================================================
 
-def gerar_qr_code_bytes(texto, tamanho_qr=120):
-    """Gera uma etiqueta com QR Code + TAG escrita embaixo."""
+def gerar_qr_code_bytes(tag, equipamento, serie, tamanho_qr=120):
+    """Gera uma etiqueta com QR Code (contendo TAG + Equipamento + Série)
+    e, embaixo, TAG e Série visíveis."""
+
+    # 1. Conteúdo do QR Code — 3 informações
+    conteudo_qr = f"TAG: {tag}\nEQUIPAMENTO: {equipamento}\nSERIE: {serie}"
 
     qr = qrcode.QRCode(
-        version=1,
+        version=None,
         error_correction=qrcode.constants.ERROR_CORRECT_M,
         box_size=10,
         border=2,
     )
-    qr.add_data(str(texto))
+    qr.add_data(conteudo_qr)
     qr.make(fit=True)
 
     img_qr = qr.make_image(fill_color="black", back_color="white").convert("RGB")
     img_qr = img_qr.resize((tamanho_qr, tamanho_qr), Image.LANCZOS)
 
-    altura_texto = 30
+    # 2. Espaço embaixo para o texto
+    altura_texto = 40
     largura_final = tamanho_qr
     altura_final = tamanho_qr + altura_texto
 
     etiqueta = Image.new("RGB", (largura_final, altura_final), "white")
     etiqueta.paste(img_qr, (0, 0))
 
+    # 3. Escreve TAG e Série embaixo
     draw = ImageDraw.Draw(etiqueta)
 
     try:
-        fonte = ImageFont.truetype("arial.ttf", 14)
+        fonte = ImageFont.truetype("arial.ttf", 12)
     except OSError:
         try:
-            fonte = ImageFont.truetype("DejaVuSans.ttf", 14)
+            fonte = ImageFont.truetype("DejaVuSans.ttf", 12)
         except OSError:
             fonte = ImageFont.load_default()
 
-    texto_str = str(texto)
-    bbox = draw.textbbox((0, 0), texto_str, font=fonte)
-    largura_texto = bbox[2] - bbox[0]
-    x_texto = (largura_final - largura_texto) // 2
-    y_texto = tamanho_qr + 5
+    # Linha 1: TAG
+    tag_str = str(tag) if tag else "—"
+    bbox_tag = draw.textbbox((0, 0), tag_str, font=fonte)
+    x_tag = (largura_final - (bbox_tag[2] - bbox_tag[0])) // 2
+    draw.text((x_tag, tamanho_qr + 4), tag_str, fill="black", font=fonte)
 
-    draw.text((x_texto, y_texto), texto_str, fill="black", font=fonte)
+    # Linha 2: Série
+    serie_str = str(serie) if serie else "—"
+    bbox_serie = draw.textbbox((0, 0), serie_str, font=fonte)
+    x_serie = (largura_final - (bbox_serie[2] - bbox_serie[0])) // 2
+    draw.text((x_serie, tamanho_qr + 20), serie_str, fill="black", font=fonte)
 
+    # 4. Retorna como BytesIO
     buffer = BytesIO()
     etiqueta.save(buffer, format="PNG")
     buffer.seek(0)
     return buffer
 
 
-def processar_planilha(arquivo_excel, coluna_alvo, nome_aba=None):
-    """Lê a planilha, gera QR Codes e retorna o Excel com as etiquetas."""
+def processar_planilha(arquivo_excel, coluna_tag, coluna_equip, coluna_serie, nome_aba=None):
+    """Lê a planilha, gera QR Codes com TAG + Equipamento + Série
+    e retorna o Excel com as etiquetas inseridas."""
 
     df = pd.read_excel(arquivo_excel, sheet_name=nome_aba)
 
-    if coluna_alvo not in df.columns:
-        raise ValueError(
-            f"A coluna '{coluna_alvo}' não foi encontrada na planilha. "
-            f"Colunas disponíveis: {list(df.columns)}"
-        )
+    # Validação das colunas
+    for col, nome in [(coluna_tag, "TAG"), (coluna_equip, "Equipamento"), (coluna_serie, "Nº Série")]:
+        if col not in df.columns:
+            raise ValueError(
+                f"A coluna '{col}' não foi encontrada. "
+                f"Colunas disponíveis: {list(df.columns)}"
+            )
 
     arquivo_saida = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
     arquivo_saida.close()
@@ -90,9 +104,11 @@ def processar_planilha(arquivo_excel, coluna_alvo, nome_aba=None):
 
     header_row = [cell.value for cell in ws[1]]
     try:
-        indice_coluna_alvo = header_row.index(coluna_alvo) + 1
-    except ValueError:
-        raise ValueError(f"Coluna '{coluna_alvo}' não encontrada no cabeçalho.")
+        idx_tag = header_row.index(coluna_tag) + 1
+        idx_equip = header_row.index(coluna_equip) + 1
+        idx_serie = header_row.index(coluna_serie) + 1
+    except ValueError as e:
+        raise ValueError(f"Erro localizando colunas no cabeçalho: {e}")
 
     ws.column_dimensions[letra_qr].width = 22
 
@@ -100,19 +116,21 @@ def processar_planilha(arquivo_excel, coluna_alvo, nome_aba=None):
     barra = st.progress(0, text="Gerando QR Codes...")
 
     for i, row in enumerate(range(2, ws.max_row + 1), start=1):
-        valor = ws.cell(row=row, column=indice_coluna_alvo).value
+        tag = ws.cell(row=row, column=idx_tag).value
+        equip = ws.cell(row=row, column=idx_equip).value
+        serie = ws.cell(row=row, column=idx_serie).value
 
-        if valor is None or str(valor).strip() == "":
+        if tag is None or str(tag).strip() == "":
             continue
 
-        buffer = gerar_qr_code_bytes(valor, tamanho_qr=120)
+        buffer = gerar_qr_code_bytes(tag, equip or "—", serie or "—", tamanho_qr=120)
 
         img = XLImage(buffer)
         img.width = 130
-        img.height = 155
+        img.height = 165
         ws.add_image(img, f"{letra_qr}{row}")
 
-        ws.row_dimensions[row].height = 115
+        ws.row_dimensions[row].height = 125
 
         progresso = i / total_linhas
         barra.progress(min(progresso, 1.0), text=f"Gerando QR Codes... {i}/{total_linhas}")
@@ -127,17 +145,17 @@ def processar_planilha(arquivo_excel, coluna_alvo, nome_aba=None):
 # INTERFACE STREAMLIT
 # ============================================================
 
-st.title("🏥 Gerador de QR Codes - Inventário")
+st.title("🏥 Gerador de QR Codes - Inventário Hospitalar")
 st.markdown(
-    "Suba a planilha de equipamentos desejada e gere automaticamente "
-    "os QR Codes de cada item, com sua TAG para impressão em etiquetas."
+    "Suba a planilha de equipamentos do hospital e gere automaticamente "
+    "os QR Codes de cada item, prontos para impressão em etiquetas."
 )
 st.divider()
 
 arquivo_enviado = st.file_uploader(
     "📄 Faça o upload da planilha (.xlsx)",
     type=["xlsx"],
-    help="A planilha deve ter a coluna 'TAG' com o código do equipamento."
+    help="A planilha deve conter as colunas: TAG, Equipamento e Nº Série."
 )
 
 if arquivo_enviado is not None:
@@ -159,14 +177,28 @@ if arquivo_enviado is not None:
         with st.expander("👀 Ver prévia dos dados"):
             st.dataframe(df_preview.head(10), use_container_width=True)
 
+        # --- Seleção das 3 colunas ---
         colunas = list(df_preview.columns)
-        indice_padrao = colunas.index("TAG") if "TAG" in colunas else 0
 
-        coluna_alvo = st.selectbox(
-            "🎯 Selecione a coluna que contém o Tombamento/ID:",
+        idx_tag = colunas.index("TAG") if "TAG" in colunas else 0
+        coluna_tag = st.selectbox(
+            "🎯 Coluna da TAG (vai dentro do QR):",
             options=colunas,
-            index=indice_padrao,
-            help="Por padrão, use a coluna 'TAG'. Esta é a informação que será codificada no QR Code."
+            index=idx_tag
+        )
+
+        idx_equip = colunas.index("Equipamento") if "Equipamento" in colunas else 0
+        coluna_equip = st.selectbox(
+            "🎯 Coluna do Equipamento (vai dentro do QR):",
+            options=colunas,
+            index=idx_equip
+        )
+
+        idx_serie = colunas.index("Nº Série") if "Nº Série" in colunas else 0
+        coluna_serie = st.selectbox(
+            "🎯 Coluna do Nº Série (vai dentro do QR e na etiqueta):",
+            options=colunas,
+            index=idx_serie
         )
 
         if st.button("🚀 Gerar QR Codes", type="primary", use_container_width=True):
@@ -174,7 +206,9 @@ if arquivo_enviado is not None:
                 try:
                     caminho_saida, total = processar_planilha(
                         arquivo_enviado,
-                        coluna_alvo,
+                        coluna_tag,
+                        coluna_equip,
+                        coluna_serie,
                         nome_aba=aba_selecionada
                     )
 
