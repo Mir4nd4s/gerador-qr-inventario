@@ -100,6 +100,41 @@ gerador-qr-inventario/
 Sugestões de melhoria são bem-vindas. Abra uma issue ou envie um pull request.
 📄 Licença
 
+## 🔄 Fluxo completo do inventário
+
+Este projeto faz parte de um sistema maior de inventário hospitalar:
+
+```text
+┌──────────────────────────────┐
+│  1. GERADOR DE QR CODES      │  ← Este repositório
+│  (Streamlit - Python)        │
+│                              │
+│  Planilha do hospital →      │
+│  QR Codes gerados →          │
+│  Etiquetas prontas           │
+└──────────────┬───────────────┘
+               │
+               │ Imprime e cola nos equipamentos
+               ▼
+┌──────────────────────────────┐
+│  2. PWA INVENTÁRIO           │  ← Repositório privado
+│  (Vercel - JavaScript)       │
+│                              │
+│  Técnicos escaneiam QR →     │
+│  Registram setor →           │
+│  Exportam Excel              │
+└──────────────────────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│  3. CONSOLIDAÇÃO             │
+│  (Excel + Power Query)       │
+│                              │
+│  União de arquivos →         │
+│  Comparação com total →      │
+│  Relatório final             │
+└──────────────────────────────┘
+
 ## 🔗 Projeto relacionado
 
 - **[PWA Inventário de Equipamentos](https://github.com/Mir4nd4s/pwa-inventario)** — Aplicativo mobile usado pelos técnicos para escanear os QR Codes gerados por esta ferramenta durante o inventário de campo. Funciona offline no celular.
