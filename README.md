@@ -4,7 +4,14 @@ Ferramenta web para gerar automaticamente QR Codes de equipamentos a partir de u
 
 ## 🎯 Objetivo
 
-Automatizar a criação de etiquetas com QR Code para inventário de equipamentos hospitalares, permitindo que o processo de contagem seja feito por leitura de código, de forma mais rápida e confiável.
+Automatizar a criação de etiquetas com QR Code para inventário de equipamentos hospitalares, permitindo que o processo de contagem seja feito por leitura de código, de forma mais rápida e confiável. 
+
+Cada QR Code gerado contém três informações do equipamento:
+- **TAG** (identificador principal)
+- **Equipamento** (nome/descrição)
+- **Nº Série**
+
+A etiqueta impressa exibe o QR Code com a **TAG** e o **Nº Série** visíveis logo abaixo, permitindo conferência visual antes mesmo de escanear.
 
 ## ✨ Funcionalidades
 
@@ -15,10 +22,17 @@ Automatizar a criação de etiquetas com QR Code para inventário de equipamento
 - Download do arquivo Excel com os QR Codes já embutidos nas células
 - Processamento em memória (sem armazenar dados no servidor)
 - Interface simples, sem necessidade de instalação
+-  QR Code com 3 informações: TAG + Equipamento + Nº Série
+- Etiqueta impressa com TAG e Série visíveis para conferência
+- Seleção independente das 3 colunas da planilha
 
 ## 📋 Formato da planilha
 
-A planilha deve conter, no mínimo, uma coluna com a TAG ou identificador único do equipamento. Exemplo:
+A planilha deve conter, no mínimo, as colunas:
+- **TAG** (obrigatória) — vai dentro do QR Code e visível na etiqueta
+- **Equipamento** (obrigatória) — vai dentro do QR Code
+- **Nº Série** (obrigatória) — vai dentro do QR Code e visível na etiqueta
+Exemplo:
 
 | TAG | Equipamento | Modelo | Fabricante | Setor | Nº Série |
 |---|---|---|---|---|---|
